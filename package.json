@@ -1,0 +1,36 @@
+{
+  "name": "agd",
+  "version": "1.0.0",
+  "description": "Auto generating docs",
+  "main": "agd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/johnbyrnerepo/agd.git"
+  },
+  "keywords": [
+    "JS",
+    "docs",
+    "easy",
+    "front",
+    "end",
+    "documentation",
+    "generator"
+  ],
+  "author": "John Byrne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/johnbyrnerepo/agd/issues"
+  },
+  "homepage": "https://github.com/johnbyrnerepo/agd#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
+    "jquery-treegrid": "^0.3.0"
+  },
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  }
+}

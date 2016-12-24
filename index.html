@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/jquery-treegrid/css/jquery.treegrid.css"></script>
+  </head>
+  <body>
+    <div class="row">
+
+      <div class="col col-md-3 sidebar"></div>
+      <div class="col col-md-9 main"></div>
+    </div>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/jquery-treegrid/js/jquery.treegrid.js"></script>
+    <script>
+    $(document).ready(function() {
+      var data = {};
+      $.get('code.json', function(data) {
+        data  = data;
+        $('.sidebar').append('<table class="treegrid"></table>');
+        var treegridIndex = 1;
+        var parentIndexes = {};
+        function listFiles(item, firstRun) {
+          if (item === undefined || item.appended) return;
+          item.appended = true;
+          if (item.path !== null) {
+            folderName = item.path.split('/')[item.path .split('/').length - 1];
+          }
+          if (item.folderName='') {
+            parentIndex = 1;
+          } else {
+            parentIndex = parentIndexes[folderName];
+          }
+          item.parentIndex = treegridIndex;
+          for (var i=0; i<item.fileNames.length; i++) {
+            treegridIndex++;
+            var file = item.fileNames[i];
+
+            if (!firstRun) {
+              $('table').append('<tr class="treegrid-' + treegridIndex +
+                ' treegrid-parent-' + parentIndex + '" + data-path="' + item.path + '">' +
+                  '<td>' + file + '</td>' +
+                '</tr>');
+            } else {
+              $('table').append('<tr class="treegrid-' + treegridIndex +
+                ' treegrid-parent-' + 1 + '" + data-path="' + item.path + '">' +
+                  '<td>' + file + '</td>' +
+                '</tr>');
+            }
+          }
+          for (var i=0; i<item.folders.length; i++) {
+            treegridIndex++;
+            var folder = item.folders[i];
+            var folderName = '';
+            parentIndexes[folder] = treegridIndex;
+            $('table').append('<tr class="treegrid-' + treegridIndex +
+              ' treegrid-parent-' + item.parentIndex + '" + data-path="' + item.path + '">' +
+                '<td>' + folder + '</td>' +
+              '</tr>');
+            listFiles(data[item.path + '/' + folder]);
+          }
+        }
+        var dataItems = Object.keys(data);
+        var item = data[dataItems[0]];
+        var depth = item.depth;
+        $('table').append('<tr class="treegrid-1 treegrid-expanded"><td>' + item.name + '</td></tr>');
+        listFiles(item, true);
+        parentIndexes[item.name] = 1;
+        var parentId = 1;
+        listFiles(item, false);
+        $('.treegrid').treegrid({ initialState: 'expanded' });
+        $('tr').on('click', function() {
+          if ($(this).text().indexOf('.') > 0) {
+            $('.main').html( data[$(this).attr('data-path')].files[data[$(this).attr('data-path')].fileNames.indexOf($(this).text())] );
+          }
+        });
+      });
+    });
+    </script>
+  </body>
+</html>
